@@ -1,0 +1,17 @@
+{
+  "name": "login-react-app",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.54.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  }
+}

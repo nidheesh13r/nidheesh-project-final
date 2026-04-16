@@ -1,0 +1,24 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Hotels DB (Docker)",
+      "Group": "Travel App",
+      "Host": "localhost",
+      "Port": 5433,
+      "MaintenanceDB": "hotels",
+      "Username": "postgres",
+      "SSLMode": "prefer",
+      "Comment": "Hotels database from docker-compose.db.yml"
+    },
+    "2": {
+      "Name": "Taste Explorer DB (Docker)",
+      "Group": "Travel App",
+      "Host": "localhost",
+      "Port": 5434,
+      "MaintenanceDB": "taste_explorer",
+      "Username": "postgres",
+      "SSLMode": "prefer",
+      "Comment": "Taste Explorer database from docker-compose.db.yml"
+    }
+  }
+}

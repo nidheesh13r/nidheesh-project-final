@@ -1,0 +1,74 @@
+version: '3.9'
+
+services:
+  hotels-db:
+    image: postgres:16-alpine
+    container_name: hotels-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: hotels
+    ports:
+      - '5433:5432'
+    volumes:
+      - hotels_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d hotels']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  hotels-seed:
+    build:
+      context: ./hotels/backend
+    container_name: hotels-seed
+    command: ["python", "setup_hotels_db.py"]
+    environment:
+      DB_HOST: hotels-db
+      DB_PORT: '5432'
+      DB_NAME: hotels
+      DB_USER: postgres
+      DB_PASSWORD: secret
+    depends_on:
+      hotels-db:
+        condition: service_healthy
+    restart: 'no'
+
+  taste-db:
+    image: postgres:16-alpine
+    container_name: taste-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: taste_explorer
+    ports:
+      - '5434:5432'
+    volumes:
+      - taste_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d taste_explorer']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  taste-seed:
+    build:
+      context: ./taste-explorer/backend
+    container_name: taste-seed
+    command: ["python", "setup_taste_db.py"]
+    environment:
+      DB_HOST: taste-db
+      DB_PORT: '5432'
+      DB_NAME: taste_explorer
+      DB_USER: postgres
+      DB_PASSWORD: secret
+    depends_on:
+      taste-db:
+        condition: service_healthy
+    restart: 'no'
+
+volumes:
+  hotels_db_data:
+  taste_db_data:

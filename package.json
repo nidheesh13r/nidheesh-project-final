@@ -1,0 +1,14 @@
+{
+  "name": "nidheesh-project",
+  "private": true,
+  "workspaces": [
+    "hotels/react-app",
+    "taste-explorer/react-app",
+    "login/react-app"
+  ],
+  "scripts": {
+    "dev:hotels": "npm --workspace hotels/react-app run dev",
+    "dev:taste": "npm --workspace taste-explorer/react-app run dev",
+    "dev:login": "npm --workspace login/react-app run dev"
+  }
+}

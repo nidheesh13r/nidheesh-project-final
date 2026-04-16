@@ -1,0 +1,188 @@
+version: '3.9'
+
+services:
+  hotels-db:
+    image: postgres:16-alpine
+    container_name: hotels-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: hotels
+    ports:
+      - '5433:5432'
+    volumes:
+      - hotels_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d hotels']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  hotels-seed:
+    build:
+      context: ./hotels/backend
+    container_name: hotels-seed
+    command: ["python", "setup_hotels_db.py"]
+    environment:
+      DB_HOST: hotels-db
+      DB_PORT: '5432'
+      DB_NAME: hotels
+      DB_USER: postgres
+      DB_PASSWORD: secret
+    depends_on:
+      hotels-db:
+        condition: service_healthy
+    restart: 'no'
+
+  taste-db:
+    image: postgres:16-alpine
+    container_name: taste-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: taste_explorer
+    ports:
+      - '5434:5432'
+    volumes:
+      - taste_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d taste_explorer']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  taste-seed:
+    build:
+      context: ./taste-explorer/backend
+    container_name: taste-seed
+    command: ["python", "setup_taste_db.py"]
+    environment:
+      DB_HOST: taste-db
+      DB_PORT: '5432'
+      DB_NAME: taste_explorer
+      DB_USER: postgres
+      DB_PASSWORD: secret
+    depends_on:
+      taste-db:
+        condition: service_healthy
+    restart: 'no'
+
+  hotels-backend:
+    build:
+      context: ./hotels/backend
+    container_name: hotels-backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: hotels-db
+      DB_PORT: '5432'
+      DB_NAME: hotels
+      DB_USER: postgres
+      DB_PASSWORD: secret
+      TASTE_API_URL: http://taste-backend:8099
+      SUPABASE_URL: https://ftdqolhijyitsotpvwps.supabase.co
+      SUPABASE_ANON_KEY: sb_publishable_4Th_Kc48QqNWowXz0e-K6g_o53BpQ2U
+      SUPABASE_SERVICE_ROLE_KEY: ''
+      ALLOWED_ORIGINS: http://localhost:5173,http://localhost:5174,http://localhost:5176
+    depends_on:
+      hotels-db:
+        condition: service_healthy
+      taste-db:
+        condition: service_healthy
+      hotels-seed:
+        condition: service_completed_successfully
+      taste-seed:
+        condition: service_completed_successfully
+    ports:
+      - '8001:8001'
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8001/health\").read()'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  taste-backend:
+    build:
+      context: ./taste-explorer/backend
+    container_name: taste-backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: taste-db
+      DB_PORT: '5432'
+      DB_NAME: taste_explorer
+      DB_USER: postgres
+      DB_PASSWORD: secret
+      HOTELS_API_URL: http://hotels-backend:8001
+      SUPABASE_URL: https://ftdqolhijyitsotpvwps.supabase.co
+      SUPABASE_ANON_KEY: sb_publishable_4Th_Kc48QqNWowXz0e-K6g_o53BpQ2U
+      ALLOWED_ORIGINS: http://localhost:5173,http://localhost:5174,http://localhost:5176
+    depends_on:
+      taste-db:
+        condition: service_healthy
+      hotels-db:
+        condition: service_healthy
+      taste-seed:
+        condition: service_completed_successfully
+      hotels-seed:
+        condition: service_completed_successfully
+    ports:
+      - '8099:8099'
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8099/health\").read()'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  login-web:
+    build:
+      context: ./login/react-app
+      args:
+        VITE_SUPABASE_URL: https://ftdqolhijyitsotpvwps.supabase.co
+        VITE_SUPABASE_ANON_KEY: sb_publishable_4Th_Kc48QqNWowXz0e-K6g_o53BpQ2U
+        VITE_AUTH_COOKIE_DOMAIN: ''
+        VITE_ALLOWED_RETURN_ORIGINS: http://localhost:5174,http://localhost:5176
+    container_name: login-web
+    restart: unless-stopped
+    ports:
+      - '5173:80'
+
+  hotels-web:
+    build:
+      context: ./hotels/react-app
+      args:
+        VITE_SUPABASE_URL: https://ftdqolhijyitsotpvwps.supabase.co
+        VITE_SUPABASE_ANON_KEY: sb_publishable_4Th_Kc48QqNWowXz0e-K6g_o53BpQ2U
+        VITE_LOGIN_URL: http://localhost:5173
+        VITE_AUTH_COOKIE_DOMAIN: ''
+    container_name: hotels-web
+    restart: unless-stopped
+    depends_on:
+      hotels-backend:
+        condition: service_healthy
+      login-web:
+        condition: service_started
+    ports:
+      - '5174:80'
+
+  taste-web:
+    build:
+      context: ./taste-explorer/react-app
+      args:
+        VITE_SUPABASE_URL: https://ftdqolhijyitsotpvwps.supabase.co
+        VITE_SUPABASE_ANON_KEY: sb_publishable_4Th_Kc48QqNWowXz0e-K6g_o53BpQ2U
+        VITE_LOGIN_URL: http://localhost:5173
+        VITE_AUTH_COOKIE_DOMAIN: ''
+    container_name: taste-web
+    restart: unless-stopped
+    depends_on:
+      taste-backend:
+        condition: service_healthy
+      login-web:
+        condition: service_started
+    ports:
+      - '5176:80'
+
+volumes:
+  hotels_db_data:
+  taste_db_data:
