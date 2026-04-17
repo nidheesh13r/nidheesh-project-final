@@ -18,7 +18,7 @@ DB_PORT = int(os.getenv('DB_PORT', '5432'))
 DB_NAME = os.getenv('DB_NAME', 'hotels')
 DB_USER = os.getenv('DB_USER', 'postgres')
 DB_PASSWORD = os.getenv('DB_PASSWORD', 'secret')
-TASTE_API_URL = os.getenv('TASTE_API_URL', 'http://localhost:8099')
+TASTE_API_URL = os.getenv('TASTE_API_URL', 'http://localhost:8002')
 
 app = FastAPI(title='Hotels BFF')
 
@@ -216,7 +216,7 @@ def taste_widget(city: str):
     try:
         res = requests.get(f'{TASTE_API_URL}/taste/search', params={'city': city}, timeout=2.5)
         if res.ok:
-            items = res.json()[:2]
+            items = res.json()
             mapped = [
                 {
                     'title': item.get('food', ''),

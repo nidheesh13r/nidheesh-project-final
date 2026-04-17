@@ -91,13 +91,46 @@ HOTELS_SEED = [
 ]
 
 
+def premium_indian_price(city: str, room_type: str, original_price: float) -> float:
+    city_factor = 75
+    if city in {'Mumbai', 'Delhi', 'Bengaluru', 'Hyderabad', 'Chennai'}:
+        city_factor = 95
+    elif city in {'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Kochi'}:
+        city_factor = 82
+    elif city in {'Surat', 'Lucknow', 'Nagpur', 'Indore'}:
+        city_factor = 72
+    elif city == 'Kanpur':
+        city_factor = 65
+
+    room = room_type.lower()
+    room_add = 1200
+    if 'palace' in room or 'villa' in room:
+        room_add = 12000
+    elif 'suite' in room:
+        room_add = 8000
+    elif 'club' in room:
+        room_add = 3500
+    elif 'executive' in room or 'premium' in room:
+        room_add = 2500
+    elif 'deluxe' in room or 'luxury' in room:
+        room_add = 1800
+
+    computed = (float(original_price) * city_factor) + room_add
+    rounded = round(computed / 500.0) * 500
+    return max(9000, rounded)
+
+
 def seed_hotels(cur) -> None:
     cur.execute('TRUNCATE TABLE hotels RESTART IDENTITY')
+    rows = [
+        (name, city, room_type, rating, premium_indian_price(city, room_type, price_per_night), image)
+        for (name, city, room_type, rating, price_per_night, image) in HOTELS_SEED
+    ]
     cur.executemany(
         '''
         INSERT INTO hotels (hotel_name, city, room_type, rating, price_per_night, image)
         VALUES (%s, %s, %s, %s, %s, %s)
         ''',
-        HOTELS_SEED,
+        rows,
     )
 
