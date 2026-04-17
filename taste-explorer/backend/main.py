@@ -20,6 +20,7 @@ DB_NAME = os.getenv('DB_NAME', 'taste_explorer')
 DB_USER = os.getenv('DB_USER', 'postgres')
 DB_PASSWORD = os.getenv('DB_PASSWORD', 'secret')
 HOTELS_API_URL = os.getenv('HOTELS_API_URL', 'http://localhost:8001')
+HOTELS_WEB_URL = os.getenv('HOTELS_WEB_URL', 'http://localhost:5174').rstrip('/')
 
 app = FastAPI(title='Taste BFF')
 app.add_middleware(
@@ -114,7 +115,21 @@ def to_image_value(row: dict) -> str:
         raw = bytes(blob)
         mime = row.get('image_mime') or 'image/jpeg'
         return f"data:{mime};base64,{base64.b64encode(raw).decode('ascii')}"
-    return row.get('image') or ''
+    image = row.get('image') or ''
+    if image.startswith('http://') or image.startswith('https://') or image.startswith('data:'):
+        return image
+    if image.startswith('/'):
+        return f'{HOTELS_WEB_URL}{image}'
+    return image
+
+
+def to_hotel_image_value(row: dict) -> str:
+    image = row.get('image') or ''
+    if image.startswith('http://') or image.startswith('https://') or image.startswith('data:'):
+        return image
+    if image.startswith('/'):
+        return f'{HOTELS_WEB_URL}{image}'
+    return image
 
 
 @app.on_event('startup')
@@ -229,7 +244,10 @@ def hotels_widget(city: str):
         res = requests.get(f'{HOTELS_API_URL}/hotels/search', params={'city': city}, timeout=2.5)
         if res.ok:
             hotels = res.json()
-            return {'city': city, 'hotels': hotels[:2]}
+            for hotel in hotels:
+                if isinstance(hotel, dict):
+                    hotel['image'] = to_hotel_image_value(hotel)
+            return {'city': city, 'hotels': hotels[:12]}
     except Exception:
         pass
     return {'city': city, 'hotels': []}

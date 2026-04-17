@@ -18,14 +18,15 @@ const DEFAULT_ALLOWED_ORIGINS = [
   'http://localhost:5175',
   'http://localhost:5176',
   'http://localhost:8001',
-  'http://localhost:8099',
+  'http://localhost:8002',
 ];
 const ALLOWED_RETURN_ORIGINS = (import.meta.env.VITE_ALLOWED_RETURN_ORIGINS || '')
   .split(',')
   .map((item) => item.trim())
   .filter(Boolean);
 const FINAL_ALLOWED_RETURN_ORIGINS = ALLOWED_RETURN_ORIGINS.length > 0 ? ALLOWED_RETURN_ORIGINS : DEFAULT_ALLOWED_ORIGINS;
-const DEFAULT_RETURN_URL = import.meta.env.VITE_DEFAULT_RETURN_URL || 'http://localhost:5176/';
+const DEFAULT_HOTELS_URL = import.meta.env.VITE_HOTELS_APP_URL || 'http://localhost:5174/';
+const DEFAULT_TASTE_URL = import.meta.env.VITE_TASTE_APP_URL || 'http://localhost:5176/';
 
 function getSB() {
   if (!SB_CLIENT) throw new Error('Missing Supabase configuration');
@@ -70,9 +71,9 @@ function getReturnTo() {
   return null;
 }
 
-function getDefaultReturnTo() {
+function sanitizeTarget(urlValue) {
   try {
-    const url = new URL(DEFAULT_RETURN_URL);
+    const url = new URL(urlValue);
     if (FINAL_ALLOWED_RETURN_ORIGINS.includes(url.origin)) return url.toString();
   } catch {
     return null;
@@ -80,9 +81,8 @@ function getDefaultReturnTo() {
   return null;
 }
 
-function getRedirectTarget() {
-  return getReturnTo() || getDefaultReturnTo();
-}
+const HOTELS_TARGET_URL = sanitizeTarget(DEFAULT_HOTELS_URL);
+const TASTE_TARGET_URL = sanitizeTarget(DEFAULT_TASTE_URL);
 
 export default function App() {
   const [tab, setTab] = useState('signin');
@@ -93,17 +93,21 @@ export default function App() {
   const [suName, setSuName] = useState('');
   const [suEmail, setSuEmail] = useState('');
   const [suPass, setSuPass] = useState('');
+  const [showDestinationChooser, setShowDestinationChooser] = useState(false);
   const authHandled = useRef(false);
 
   useEffect(() => {
     if (!SUPABASE_READY) return;
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
-    const returnTo = getRedirectTarget();
-
     async function finish(session) {
       setAuthCookies(session);
-      if (returnTo) window.location.href = returnTo;
+      const returnTo = getReturnTo();
+      if (returnTo) {
+        window.location.href = returnTo;
+        return;
+      }
+      setShowDestinationChooser(true);
     }
 
     if (code && !authHandled.current) {
@@ -146,9 +150,13 @@ export default function App() {
       const { data, error: authError } = await sb.auth.signInWithPassword({ email: siEmail, password: siPass });
       if (authError) return setError(authError.message);
       if (data.session) {
+        const returnTo = getReturnTo();
         setAuthCookies(data.session);
-        const returnTo = getRedirectTarget();
-        if (returnTo) window.location.href = returnTo;
+        if (returnTo) {
+          window.location.href = returnTo;
+          return;
+        }
+        setShowDestinationChooser(true);
       }
     } catch {
       setError('Sign-in failed. Please try again.');
@@ -171,9 +179,13 @@ export default function App() {
       });
       if (authError) return setError(authError.message);
       if (data.session) {
+        const returnTo = getReturnTo();
         setAuthCookies(data.session);
-        const returnTo = getRedirectTarget();
-        if (returnTo) window.location.href = returnTo;
+        if (returnTo) {
+          window.location.href = returnTo;
+          return;
+        }
+        setShowDestinationChooser(true);
       } else {
         setTab('signin');
         setError('Account created. Please confirm your email then sign in.');
@@ -181,6 +193,11 @@ export default function App() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function goToDestination(target) {
+    if (!target) return;
+    window.location.href = target;
   }
 
   return (
@@ -213,6 +230,16 @@ export default function App() {
             <input value={suPass} onChange={(e) => setSuPass(e.target.value)} type="password" />
             <button disabled={loading}>{loading ? 'Please wait…' : 'Create Account'}</button>
           </form>
+        )}
+
+        {showDestinationChooser && (
+          <div className="destination-chooser" role="region" aria-label="Choose destination">
+            <p className="destination-title">Choose where you want to go</p>
+            <div className="destination-actions">
+              <button type="button" onClick={() => goToDestination(HOTELS_TARGET_URL)} disabled={!HOTELS_TARGET_URL}>Go to Hotels</button>
+              <button type="button" onClick={() => goToDestination(TASTE_TARGET_URL)} disabled={!TASTE_TARGET_URL}>Go to Taste Explorer</button>
+            </div>
+          </div>
         )}
       </div>
     </div>

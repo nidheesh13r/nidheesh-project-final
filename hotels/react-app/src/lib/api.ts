@@ -59,6 +59,10 @@ export async function searchHotels(city: string): Promise<HotelItem[]> {
   return Array.isArray(data) ? data : [];
 }
 
+export async function fetchAllHotels(): Promise<HotelItem[]> {
+  return searchHotels('');
+}
+
 export async function fetchTasteWidget(city: string): Promise<any[]> {
   const res = await fetch(`/widget/taste?city=${encodeURIComponent(city)}`);
   if (!res.ok) return [];
@@ -79,7 +83,19 @@ export async function createBooking(payload: any): Promise<any> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
-  return res.ok ? res.json() : null;
+  if (res.ok) return res.json();
+
+  let detail = 'Booking failed. Please try again.';
+  try {
+    const data = await res.json();
+    if (typeof data?.detail === 'string' && data.detail.trim()) {
+      detail = data.detail;
+    }
+  } catch {
+    // Keep fallback error message when response is not JSON.
+  }
+
+  throw new Error(detail);
 }
 
 export async function cancelBooking(bookingId: number): Promise<boolean> {

@@ -7,7 +7,7 @@ Independent Hotels and Taste web apps with separate FastAPI backends, separate P
 - `hotels/react-app` - Hotels frontend on port `5174`
 - `hotels/backend` - Hotels FastAPI backend on port `8001`
 - `taste-explorer/react-app` - Taste frontend on port `5176`
-- `taste-explorer/backend` - Taste FastAPI backend on port `8099`
+- `taste-explorer/backend` - Taste FastAPI backend on port `8002`
 - `login/react-app` - Centralized Supabase login on port `5173`
 
 ## Database
@@ -74,7 +74,7 @@ Ports:
 - Hotels app: `http://localhost:5174`
 - Taste app: `http://localhost:5176`
 - Hotels backend: `http://localhost:8001`
-- Taste backend: `http://localhost:8099`
+- Taste backend: `http://localhost:8002`
 
 Stop the full stack:
 

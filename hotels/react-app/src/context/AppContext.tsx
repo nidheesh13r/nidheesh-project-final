@@ -10,6 +10,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [cities, setCities] = useState<string[]>([]);
   const [city, setCity] = useState('Miami');
   const [hotels, setHotels] = useState<any[]>([]);
+  const [allHotels, setAllHotels] = useState<any[]>([]);
   const [tasteWidget, setTasteWidget] = useState<any[]>([]);
   const [bookings, setBookings] = useState<any[]>([]);
 
@@ -20,6 +21,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setCities(items);
       if (items.length > 0) setCity(items[0]);
     });
+  }, []);
+
+  useEffect(() => {
+    api.fetchAllHotels().then(setAllHotels);
   }, []);
 
   useEffect(() => {
@@ -69,7 +74,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AppContext.Provider value={{ user, profile, login: loginRedirect, logout, isLoggedIn: !!user, setProfile, saveProfile, cities, city, setCity, hotels, tasteWidget, bookings, bookStay, cancelStay }}>
+    <AppContext.Provider value={{ user, profile, login: loginRedirect, logout, isLoggedIn: !!user, setProfile, saveProfile, cities, city, setCity, hotels, allHotels, tasteWidget, bookings, bookStay, cancelStay }}>
       {children}
     </AppContext.Provider>
   );

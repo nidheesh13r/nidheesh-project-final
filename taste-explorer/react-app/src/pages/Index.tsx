@@ -1,6 +1,6 @@
 import Navbar from '@/components/Navbar';
 import { useAppContext } from '@/context/AppContext';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import './taste.css';
 
 export default function Index() {
@@ -10,12 +10,30 @@ export default function Index() {
   const [hasSearched, setHasSearched] = useState(false);
   const [showRestaurantSuggestions, setShowRestaurantSuggestions] = useState(false);
   const [buttonState, setButtonState] = useState<Record<string, 'idle' | 'adding' | 'added' | 'login'>>({});
+  const [checkInDate, setCheckInDate] = useState(() => {
+    const date = new Date();
+    date.setDate(date.getDate() + 1);
+    return date.toISOString().slice(0, 10);
+  });
+  const [checkOutDate, setCheckOutDate] = useState(() => {
+    const date = new Date();
+    date.setDate(date.getDate() + 3);
+    return date.toISOString().slice(0, 10);
+  });
+  const [roomType, setRoomType] = useState('Any');
+  const [hotelSearchTriggered, setHotelSearchTriggered] = useState(false);
   const restaurantBoxRef = useRef<HTMLDivElement | null>(null);
   const cityBoxRef = useRef<HTMLDivElement | null>(null);
   const [showCitySuggestions, setShowCitySuggestions] = useState(false);
   const typedTerm = restaurantInput.trim().toLowerCase();
   const term = restaurantSearch.trim().toLowerCase();
-  const restaurantSuggestions = Array.from(new Set(foods.map((food: any) => food.restaurant)))
+  const restaurantSuggestions = Array.from<string>(
+    new Set<string>(
+      foods
+        .map((food: any) => String(food.restaurant || '').trim())
+        .filter((name: string) => Boolean(name)),
+    ),
+  )
     .sort((a, b) => a.localeCompare(b))
     .filter((restaurant) => restaurant.toLowerCase().startsWith(typedTerm))
     .slice(0, 10);
@@ -26,6 +44,57 @@ export default function Index() {
     if (!term) return true;
     return String(food.restaurant || '').toLowerCase().startsWith(term);
   });
+
+  function formatINR(value: number) {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0,
+    }).format(value || 0);
+  }
+
+  const visibleHotelsWidget = useMemo(() => {
+    if (roomType === 'Any') return hotelsWidget;
+    return hotelsWidget.filter((hotel: any) => {
+      const value = String(hotel.room_type || '').toLowerCase();
+      const selected = roomType.toLowerCase();
+      if (selected === 'premium') {
+        return value.includes('premium') || value.includes('executive') || value.includes('club') || value.includes('king');
+      }
+      if (selected === 'suite') {
+        return value.includes('suite') || value.includes('villa') || value.includes('palace');
+      }
+      return value.includes(selected);
+    });
+  }, [hotelsWidget, roomType]);
+
+  const hotelResults = useMemo(() => {
+    if (!hotelSearchTriggered) return [];
+    return visibleHotelsWidget;
+  }, [hotelSearchTriggered, visibleHotelsWidget]);
+
+  const bookingBaseUrl = `${window.location.protocol}//${window.location.hostname}:5174/booking`;
+
+  function buildBookingUrl(hotel: any): string {
+    const params = new URLSearchParams({
+      hotelName: String(hotel.hotel_name || ''),
+      city: String(hotel.city || city),
+      roomType: roomType === 'Any' ? String(hotel.room_type || '') : roomType,
+      pricePerNight: String(hotel.price_per_night || 0),
+      checkIn: checkInDate,
+      checkOut: checkOutDate,
+    });
+    return `${bookingBaseUrl}?${params.toString()}`;
+  }
+
+  function runHotelSearch() {
+    if (checkOutDate <= checkInDate) {
+      const next = new Date(checkInDate);
+      next.setDate(next.getDate() + 1);
+      setCheckOutDate(next.toISOString().slice(0, 10));
+    }
+    setHotelSearchTriggered(true);
+  }
 
   function runSearch() {
     setRestaurantSearch(restaurantInput.trim());
@@ -59,6 +128,10 @@ export default function Index() {
     setShowRestaurantSuggestions(false);
     setShowCitySuggestions(false);
   }, [city]);
+
+  useEffect(() => {
+    setHotelSearchTriggered(false);
+  }, [city, roomType, checkInDate, checkOutDate]);
 
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
@@ -196,20 +269,88 @@ export default function Index() {
             )}
           </div>
         </section>
-        <aside className="widget">
-          <div className="widget-head">
-            <h3 style={{ margin: 0 }}>LUXE HOTELS</h3>
-            <small>MFE Connected</small>
+        <aside className="widget hotel-widget">
+          <div className="widget-head hotel-widget-head">
+            <h3 style={{ margin: 0 }}>Closest Hotels</h3>
+            <small className="hotel-widget-badge">MFE Connected</small>
           </div>
-          <div className="widget-body">
-            <p style={{ marginTop: 0, color: '#64748b' }}>Hotels near top food hubs in {city}</p>
-            {hotelsWidget.map((h: any, i: number) => (
-              <div key={i} className="widget-card">
-                <b>{h.hotel_name}</b>
-                <p style={{ margin: '6px 0 0' }}>{h.city} • ${h.price_per_night}/night</p>
+          <div className="widget-body hotel-widget-body">
+            <div className="hotel-widget-form-grid">
+              <div className="hotel-widget-field">
+                <label>Area (Near Food Hub)</label>
+                <select value={city} onChange={(e) => setCity(e.target.value)}>
+                  {cities.map((c: string) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
               </div>
+
+              <div className="hotel-widget-field">
+                <label>Check In</label>
+                <input type="date" value={checkInDate} onChange={(e) => setCheckInDate(e.target.value)} />
+              </div>
+
+              <div className="hotel-widget-field">
+                <label>Check Out</label>
+                <input type="date" min={checkInDate} value={checkOutDate} onChange={(e) => setCheckOutDate(e.target.value)} />
+              </div>
+
+              <div className="hotel-widget-field">
+                <label>Room Type</label>
+                <select value={roomType} onChange={(e) => setRoomType(e.target.value)}>
+                  <option value="Any">Any</option>
+                  <option value="Standard">Standard</option>
+                  <option value="Deluxe">Deluxe</option>
+                  <option value="Premium">Premium</option>
+                  <option value="Suite">Suite</option>
+                </select>
+              </div>
+            </div>
+
+            <button className="pill-btn hotel-widget-cta" onClick={runHotelSearch}>
+              Find Hotels
+            </button>
+
+            {!hotelSearchTriggered && (
+              <article className="widget-card hotel-widget-card">
+                <b>Ready to find your stay?</b>
+                <p>Set filters and click Find Hotels to load matching options.</p>
+              </article>
+            )}
+
+            {hotelResults.map((h: any, i: number) => (
+              <article key={i} className="widget-card hotel-widget-card hotel-mini-card">
+                <img className="hotel-mini-image" src={h.image || '/home-hero.jpg'} alt={h.hotel_name} loading="lazy" decoding="async" />
+                <div className="hotel-mini-content">
+                  <div className="hotel-mini-top">
+                    <div>
+                      <b>{h.hotel_name}</b>
+                      <p>{h.room_type} • {h.city}</p>
+                    </div>
+                    <span className="hotel-mini-rating">★ {h.rating}</span>
+                  </div>
+                  <div className="hotel-widget-price-row">
+                    <strong>{formatINR(Number(h.price_per_night || 0))}</strong>
+                    <span>/ night</span>
+                  </div>
+                  <button
+                    className="pill-btn hotel-mini-book-btn"
+                    onClick={() => {
+                      window.location.href = buildBookingUrl(h);
+                    }}
+                  >
+                    Book Now
+                  </button>
+                </div>
+              </article>
             ))}
-            <button className="pill-btn pill-indigo" style={{ width: '100%', marginTop: 12 }} onClick={() => window.open('http://localhost:5174', '_blank')}>Open Hotels Webapp</button>
+
+            {hotelSearchTriggered && hotelResults.length === 0 && (
+              <article className="widget-card hotel-widget-card">
+                <b>No hotels available</b>
+                <p>Try another city or room type to view nearby stays.</p>
+              </article>
+            )}
           </div>
         </aside>
       </main>

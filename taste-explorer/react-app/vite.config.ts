@@ -6,10 +6,10 @@ export default defineConfig({
   server: {
     port: 5176,
     proxy: {
-      '/cities': 'http://localhost:8099',
-      '/taste': 'http://localhost:8099',
-      '/users': 'http://localhost:8099',
-      '/widget': 'http://localhost:8099',
+      '/cities': 'http://localhost:8002',
+      '/taste': 'http://localhost:8002',
+      '/users': 'http://localhost:8002',
+      '/widget': 'http://localhost:8002',
     },
   },
   plugins: [react()],

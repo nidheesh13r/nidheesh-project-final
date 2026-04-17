@@ -4,7 +4,7 @@ import './taste.css';
 
 export default function LibraryPage() {
   const { library, removeFood } = useAppContext();
-  const grouped = library.reduce((acc: Record<string, any[]>, item: any) => {
+  const grouped: Record<string, any[]> = library.reduce((acc: Record<string, any[]>, item: any) => {
     const key = item.location || 'Unknown';
     acc[key] = acc[key] || [];
     acc[key].push(item);

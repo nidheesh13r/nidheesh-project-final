@@ -1,7 +1,7 @@
 import os
 import psycopg2
 
-from seed_data import download_images_to_db, seed_signature_foods
+from seed_data import seed_signature_foods
 
 DB_HOST = os.getenv('DB_HOST', '127.0.0.1')
 DB_PORT = os.getenv('DB_PORT', '5434')
@@ -50,17 +50,19 @@ cur.execute(
 		'''
 )
 
+cur.execute('TRUNCATE TABLE signature_food_library, users_profile, signature_foods RESTART IDENTITY CASCADE')
+
 cur.execute("ALTER TABLE signature_foods ADD COLUMN IF NOT EXISTS image TEXT NOT NULL DEFAULT ''")
 cur.execute("ALTER TABLE signature_foods ADD COLUMN IF NOT EXISTS image_blob BYTEA")
 cur.execute("ALTER TABLE signature_foods ADD COLUMN IF NOT EXISTS image_mime TEXT NOT NULL DEFAULT 'image/jpeg'")
 cur.execute("ALTER TABLE signature_food_library ADD COLUMN IF NOT EXISTS image TEXT NOT NULL DEFAULT ''")
 
-seed_signature_foods(cur, reset=True)
-success, failed = download_images_to_db(cur)
+seed_signature_foods(cur, reset=False)
+success, failed = 0, 0
 
 conn.commit()
 cur.close()
 conn.close()
 
-print(f'Taste DB setup completed. Downloaded images: {success}, failed: {failed}')
+print('Taste DB setup completed. Image download skipped for fast reset.')
 

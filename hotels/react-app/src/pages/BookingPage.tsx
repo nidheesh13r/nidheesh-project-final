@@ -16,6 +16,10 @@ function maxGuestsPerRoom(roomType: string): number {
   return 2;
 }
 
+function formatINR(value: number): string {
+  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value || 0);
+}
+
 export default function BookingPage() {
   const query = useQuery();
   const navigate = useNavigate();
@@ -70,18 +74,28 @@ export default function BookingPage() {
       return;
     }
     setError('');
-    await bookStay({
-      hotel_name: hotelName,
-      city,
-      room_type: roomType,
-      check_in: checkIn,
-      check_out: checkOut,
-      total_price: total,
-      num_rooms: rooms,
-      num_guests: guests,
-      gov_id: govId.trim(),
-    });
-    navigate('/my-bookings');
+    try {
+      const booking = await bookStay({
+        hotel_name: hotelName,
+        city,
+        room_type: roomType,
+        check_in: checkIn,
+        check_out: checkOut,
+        total_price: total,
+        num_rooms: rooms,
+        num_guests: guests,
+        gov_id: govId.trim(),
+      });
+
+      if (!booking) {
+        setError('Booking failed. Please try again.');
+        return;
+      }
+
+      navigate('/my-bookings');
+    } catch (err: any) {
+      setError(err?.message || 'Booking failed. Please try again.');
+    }
   }
 
   return (
@@ -104,7 +118,7 @@ export default function BookingPage() {
                   ))}
                 </select>
               </div>
-              <div className="field"><label>Price Per Night</label><input value={`$${pricePerNight}`} readOnly /></div>
+              <div className="field"><label>Price Per Night</label><input value={formatINR(pricePerNight)} readOnly /></div>
               <div className="field">
                 <label>Check In</label>
                 <input type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
@@ -152,8 +166,8 @@ export default function BookingPage() {
             <div className="booking-summary-row"><span>Nights</span><b>{nights}</b></div>
             <div className="booking-summary-row"><span>Rooms</span><b>{rooms}</b></div>
             <div className="booking-summary-row"><span>Guests</span><b>{guests}</b></div>
-            <div className="booking-summary-row"><span>Rate / Night</span><b>${pricePerNight}</b></div>
-            <div className="booking-summary-row booking-summary-total"><span>Total</span><b>${total}</b></div>
+            <div className="booking-summary-row"><span>Rate / Night</span><b>{formatINR(pricePerNight)}</b></div>
+            <div className="booking-summary-row booking-summary-total"><span>Total</span><b>{formatINR(total)}</b></div>
             <button className="pill-btn booking-confirm-btn" onClick={handleConfirm}>Confirm Elegant Booking</button>
           </aside>
         </div>

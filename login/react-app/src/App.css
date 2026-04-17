@@ -12,3 +12,39 @@ h1 { margin: 0; font-size: 32px; }
 .form { display: grid; gap: 10px; }
 .form input { border-radius: 12px; border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.08); color: white; padding: 12px 14px; }
 .error { margin: 12px 0; padding: 12px; border-radius: 12px; background: rgba(239,68,68,.16); color: #fecaca; }
+
+.destination-chooser {
+	margin-top: 14px;
+	border: 1px solid rgba(148, 163, 184, 0.35);
+	border-radius: 14px;
+	padding: 12px;
+	background: rgba(15, 23, 42, 0.45);
+}
+
+.destination-title {
+	margin: 0 0 10px;
+	color: #e2e8f0;
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.destination-actions {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 8px;
+}
+
+.destination-actions button {
+	border: 0;
+	border-radius: 10px;
+	min-height: 40px;
+	font-weight: 700;
+	color: #fff;
+	background: linear-gradient(135deg, #0f766e, #0ea5e9);
+	cursor: pointer;
+}
+
+.destination-actions button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}

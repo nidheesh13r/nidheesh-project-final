@@ -75,6 +75,41 @@ CITY_RESTAURANTS = {
         'Kayees Rahmathulla Cafe': ['Mutton Biryani', 'Alsa', 'Mutton Curry', 'Pathiri', 'Falooda'],
         'Grand Pavilion': ['Kerala Meals', 'Fish Molee', 'Appam', 'Kappa and Fish Curry', 'Payasam'],
     },
+    'Lucknow': {
+        'Tunday Kababi': ['Galouti Kebab', 'Kakori Kebab', 'Biryani', 'Sheermal', 'Korma'],
+        'Idris Biryani': ['Mutton Biryani', 'Chicken Biryani', 'Korma', 'Seekh Kebab', 'Raita'],
+        'Dastarkhwan': ['Nihari', 'Kulcha Nihari', 'Mutton Biryani', 'Rumali Roti', 'Phirni'],
+        'Moti Mahal Lucknow': ['Butter Chicken', 'Dal Makhani', 'Paneer Tikka', 'Tandoori Roti', 'Gulab Jamun'],
+        'Royal Sky': ['Awadhi Thali', 'Lucknowi Kebabs', 'Shahi Tukda', 'Lucknowi Pulao', 'Falooda'],
+    },
+    'Kanpur': {
+        'Thaggu Ke Laddu': ['Motichoor Laddu', 'Kaju Katli', 'Gulab Jamun', 'Rasgulla', 'Peda'],
+        'Chatorey': ['Aloo Tikki', 'Pani Puri', 'Dahi Bhalla', 'Samosa Chaat', 'Raj Kachori'],
+        'Sagar Ratna Kanpur': ['Masala Dosa', 'Idli', 'Uttapam', 'Pongal', 'Filter Coffee'],
+        'Milan Restaurant': ['Chicken Curry', 'Mutton Curry', 'Paneer Butter Masala', 'Naan', 'Biryani'],
+        'The Royale Kitchen': ['Kanpuri Thali', 'Tandoori Platter', 'Paratha', 'Lassi', 'Kheer'],
+    },
+    'Nagpur': {
+        'Nanking': ['Schezwan Noodles', 'Fried Rice', 'Chilli Paneer', 'Manchurian', 'Spring Rolls'],
+        'Haldiram Nagpur': ['Samosa', 'Kachori', 'Pav Bhaji', 'Chole Bhature', 'Gulab Jamun'],
+        'Barbeque Nation': ['Tandoori Chicken', 'Seekh Kebab', 'Paneer Tikka', 'Mutton Seekh', 'Brownie'],
+        'Hotel Centre Point': ['Nagpuri Saoji Chicken', 'Saoji Mutton', 'Biryani', 'Roti', 'Kharvas'],
+        'Zam Zam': ['Biryani', 'Chicken 65', 'Kebab Platter', 'Naan', 'Falooda'],
+    },
+    'Indore': {
+        'Sarafa Bazaar': ['Poha Jalebi', 'Bhutte Ka Kees', 'Kachori', 'Malpua', 'Rabri'],
+        'Chhappan Dukan': ['Dahi Bada', 'Garadu', 'Pani Puri', 'Shikanji', 'Kulfi'],
+        'Vijay Chaat House': ['Aloo Tikki', 'Samosa Chaat', 'Sev Puri', 'Dahi Puri', 'Bhel Puri'],
+        'Chokhi Dhani Indore': ['Dal Baati', 'Laal Maas', 'Gatte Ki Sabzi', 'Ker Sangri', 'Churma'],
+        'The Square Indore': ['Paneer Tikka', 'Veg Platter', 'Naan', 'Brownie', 'Mocktail'],
+    },
+    'Surat': {
+        'Gwalia Sweets': ['Locho', 'Khaman', 'Dhokla', 'Sev Khamani', 'Fafda'],
+        'Kansar Gujarati Thali': ['Gujarati Thali', 'Undhiyu', 'Handvo', 'Rotla', 'Basundi'],
+        'Palladium Surat': ['Pav Bhaji', 'Masala Dosa', 'Veg Platter', 'Manchurian', 'Kulfi'],
+        'Sugar N Spice': ['Pizza', 'Pasta', 'Sandwich', 'Burger', 'Milkshake'],
+        'The Grand Bhagwati Surat': ['Surti Locho', 'Rajasthani Thali', 'Kachori', 'Jalebi', 'Lassi'],
+    },
 }
 
 
@@ -94,20 +129,34 @@ TASTE_SEED = [
 def seed_signature_foods(cur, reset: bool = True) -> None:
     if reset:
         cur.execute('TRUNCATE TABLE signature_foods RESTART IDENTITY')
-    else:
-        cur.execute('SELECT COUNT(*) AS total FROM signature_foods')
-        count_row = cur.fetchone()
-        count = count_row['total'] if isinstance(count_row, dict) else count_row[0]
-        if count > 0:
-            return
 
-    cur.executemany(
-        '''
-        INSERT INTO signature_foods (city, food, restaurant, image)
-        VALUES (%s, %s, %s, %s)
-        ''',
-        TASTE_SEED,
-    )
+    if reset:
+        cur.executemany(
+            '''
+            INSERT INTO signature_foods (city, food, restaurant, image)
+            VALUES (%s, %s, %s, %s)
+            ''',
+            TASTE_SEED,
+        )
+        return
+
+    # Backfill any missing rows so existing databases with partial seed data
+    # (from older versions) are brought up to date without duplication.
+    for city, food, restaurant, image in TASTE_SEED:
+        cur.execute(
+            '''
+            INSERT INTO signature_foods (city, food, restaurant, image)
+            SELECT %s, %s, %s, %s
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM signature_foods
+                WHERE lower(city) = lower(%s)
+                  AND lower(food) = lower(%s)
+                  AND lower(restaurant) = lower(%s)
+            )
+            ''',
+            (city, food, restaurant, image, city, food, restaurant),
+        )
 
 
 def download_images_to_db(cur, timeout: int = 8) -> tuple[int, int]:
