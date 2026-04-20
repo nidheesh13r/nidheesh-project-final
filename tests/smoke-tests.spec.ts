@@ -15,7 +15,7 @@ test.describe('Luxe Travel Smoke Suite - 20 Cases', () => {
     await page.goto(URLS.login);
     await expect(page.getByRole('heading', { name: /luxe travel login/i })).toBeVisible();
   });
-
+  
   test('TAHA-3 Taste Explorer basic load', async ({ page }) => {
     await page.goto(URLS.taste);
     await expect(page.locator('header')).toBeVisible();
