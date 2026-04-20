@@ -44,19 +44,28 @@ jobs:
     - name: Upload Test Results to Jira (Xray)
       if: always()
       run: |
-        # IMPORTANT: Xray uses region-specific API endpoints for data residency.
-        # Change this to match your Jira region:
-        # - US: https://us.xray.cloud.getxray.app
-        # - EU: https://eu.xray.cloud.getxray.app
-        # - AU: https://au.xray.cloud.getxray.app
-        
-        XRAY_API_BASE="https://us.xray.cloud.getxray.app"
+        # Change this to: us, eu, or au
+        REGION="us"
+        XRAY_API_BASE="https://${REGION}.xray.cloud.getxray.app"
         
         echo "Authenticating with Xray ($XRAY_API_BASE)..."
-        TOKEN=$(curl -s -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"${{ secrets.XRAY_CLIENT_ID }}\",\"client_secret\": \"${{ secrets.XRAY_CLIENT_SECRET }}\" }" $XRAY_API_BASE/api/v1/authenticate | tr -d '"')
+        RESPONSE=$(curl -s -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"${{ secrets.XRAY_CLIENT_ID }}\",\"client_secret\": \"${{ secrets.XRAY_CLIENT_SECRET }}\" }" $XRAY_API_BASE/api/v1/authenticate)
         
-        echo "Uploading JUnit XML to Xray..."
-        curl -s -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $TOKEN" --data @"playwright-report/results.xml" "$XRAY_API_BASE/api/v1/import/execution/junit?projectKey=${{ secrets.JIRA_PROJECT_KEY }}"
+        if [[ $RESPONSE == *"error"* ]]; then
+          echo "❌ Authentication Failed!"
+          echo "Response: $RESPONSE"
+          exit 1
+        fi
+        
+        TOKEN=$(echo $RESPONSE | tr -d '"')
+        
+        echo "✅ Authenticated. Uploading JUnit XML to Xray..."
+        UPLOAD_RESPONSE=$(curl -s -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $TOKEN" --data @"playwright-report/results.xml" "$XRAY_API_BASE/api/v1/import/execution/junit?projectKey=${{ secrets.JIRA_PROJECT_KEY }}")
+        
+        echo "Upload Response: $UPLOAD_RESPONSE"
+        if [[ $UPLOAD_RESPONSE == *"error"* ]]; then
+          exit 1
+        fi
 
     - name: Save HTML Report Artifact
       uses: actions/upload-artifact@v4
