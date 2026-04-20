@@ -8,8 +8,8 @@ REM - Taste backend (8002)
 REM - Hotels frontend (5174)
 REM - Taste frontend (5176)
 
-set ROOT=D:\nidheesh project
-set PY=D:\nidheesh project\.venv\Scripts\python.exe
+set ROOT=D:\nidheesh project original
+set PY=D:\nidheesh project original\.venv\Scripts\python.exe
 
 cd /d "%ROOT%"
 

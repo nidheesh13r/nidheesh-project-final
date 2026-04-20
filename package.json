@@ -10,5 +10,8 @@
     "dev:hotels": "npm --workspace hotels/react-app run dev",
     "dev:taste": "npm --workspace taste-explorer/react-app run dev",
     "dev:login": "npm --workspace login/react-app run dev"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.59.1"
   }
 }
