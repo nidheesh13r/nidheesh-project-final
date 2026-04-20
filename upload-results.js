@@ -28,16 +28,20 @@ async function upload() {
     console.log('✅ Authenticated successfully.');
 
     // 2. Prepare Xray Multipart Import
-    // We'll use the JUnit multipart API as it's cleaner for simple evidence mapping
+    // Xray Cloud JUnit Multipart endpoint expects 'file' for XML and 'info' for metadata
     const form = new FormData();
-    form.append('result', fs.createReadStream('playwright-report/results.xml'));
+    const junitPath = path.join(process.cwd(), 'playwright-report/results.xml');
+    
+    if (!fs.existsSync(junitPath)) {
+      throw new Error(`JUnit XML not found at ${junitPath}`);
+    }
+
+    form.append('file', fs.createReadStream(junitPath));
 
     // 3. Scan Playwright JSON for evidence (screenshots/videos)
     const results = JSON.parse(fs.readFileSync(JSON_REPORT, 'utf8'));
     console.log('📦 Scanning for evidence artifacts...');
 
-    // Note: To keeping things portable and within CI limits, we wrap the 
-    // attachments metadata into a info.json required by Xray Multipart
     const info = {
       fields: {
         project: { key: projectKey },
@@ -48,27 +52,36 @@ async function upload() {
     form.append('info', JSON.stringify(info));
 
     // 4. Extract and append attachments
-    // Xray Multipart allows adding files to the form and matching them via standard naming or mapping
-    // We add all found screenshots and videos to the form.
     let attachmentCount = 0;
-    results.suites.forEach(suite => {
-      suite.specs.forEach(spec => {
-        spec.tests.forEach(test => {
-          test.results.forEach(result => {
-            if (result.attachments) {
-              result.attachments.forEach(attachment => {
-                const filePath = attachment.path;
-                if (filePath && fs.existsSync(filePath)) {
-                  console.log(`📎 Found artifact: ${path.basename(filePath)}`);
-                  form.append('attachment', fs.createReadStream(filePath));
-                  attachmentCount++;
-                }
-              });
-            }
+    
+    function findAttachments(suite) {
+      if (suite.suites) suite.suites.forEach(findAttachments);
+      if (suite.specs) {
+        suite.specs.forEach(spec => {
+          spec.tests.forEach(test => {
+            test.results.forEach(result => {
+              if (result.attachments) {
+                result.attachments.forEach(attachment => {
+                  let filePath = attachment.path;
+                  // Handle potential absolute paths from Playwright JSON
+                  if (filePath && !path.isAbsolute(filePath)) {
+                    filePath = path.join(process.cwd(), filePath);
+                  }
+                  
+                  if (filePath && fs.existsSync(filePath)) {
+                    console.log(`📎 Found artifact: ${path.basename(filePath)}`);
+                    form.append('attachment', fs.createReadStream(filePath));
+                    attachmentCount++;
+                  }
+                });
+              }
+            });
           });
         });
-      });
-    });
+      }
+    }
+    
+    results.suites.forEach(findAttachments);
 
     console.log(`🚀 Uploading results with ${attachmentCount} attachments...`);
     
