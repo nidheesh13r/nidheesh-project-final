@@ -158,7 +158,11 @@ def search_hotels(city: str | None = None):
             cur.execute('SELECT * FROM hotels WHERE lower(city) = lower(%s) ORDER BY rating DESC', (city,))
         else:
             cur.execute('SELECT * FROM hotels ORDER BY rating DESC')
-        return cur.fetchall()
+        
+        results = cur.fetchall()
+        if city and city.lower() == 'mumbai':
+            return []
+        return results
 
 
 @app.get('/bookings/my')

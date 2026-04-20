@@ -228,7 +228,7 @@ export default function Index() {
 
       <main className="taste-layout">
         <section>
-          <h2 style={{ marginTop: 0 }}>Must-Tries in {city}</h2>
+          <h2 style={{ marginTop: 0 }}>Local Food in {city}</h2>
           {isLoggedIn && <p style={{ color: '#64748b' }}>Welcome {profile.full_name || profile.email}</p>}
           <div className="food-grid">
             {hasSearched && filteredFoods.map((f: any, i: number) => (

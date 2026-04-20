@@ -175,7 +175,7 @@ export default function Index() {
     <div className="hotels-root hotels-glass">
       <Navbar />
       <section className="hero">
-        <h1>Discover Your Perfect Escape.</h1>
+        <h1>Discover Your Imperfect Escape.</h1>
         <div className="search-bar">
           <div className="search-cell" ref={cityBoxRef}>
             <label>Destination</label>

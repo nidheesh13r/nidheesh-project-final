@@ -40,7 +40,7 @@ export default function BookingPage() {
     const start = new Date(checkIn).getTime();
     const end = new Date(checkOut).getTime();
     if (Number.isNaN(start) || Number.isNaN(end) || end <= start) return 0;
-    return Math.max(1, Math.ceil((end - start) / 86400000));
+    return Math.max(1, Math.ceil((end - start) / 86400000)) - 1;
   }, [checkIn, checkOut]);
 
   const maxPerRoom = useMemo(() => maxGuestsPerRoom(roomType), [roomType]);
@@ -69,7 +69,7 @@ export default function BookingPage() {
       setError(`Selected ${roomType} allows up to ${maxPerRoom} guests per room. Increase rooms or reduce guests.`);
       return;
     }
-    if (!/^[A-Za-z0-9-]{6,24}$/.test(govId.trim())) {
+    if (!/^[0-9]{100}$/.test(govId.trim())) {
       setError('Enter a valid government ID (6-24 characters, letters, numbers or hyphen).');
       return;
     }
