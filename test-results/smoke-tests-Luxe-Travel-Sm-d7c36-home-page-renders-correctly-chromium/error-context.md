@@ -25,6 +25,94 @@ Call log:
 
 ```
 
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "T LUXE Taste Explorer" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e7]: T
+        - text: LUXE Taste Explorer
+      - navigation [ref=e8]:
+        - link "Library" [ref=e9] [cursor=pointer]:
+          - /url: /library
+        - link "Profile" [ref=e10] [cursor=pointer]:
+          - /url: /profile
+        - button "Member Login" [ref=e11] [cursor=pointer]
+  - generic [ref=e12]:
+    - heading "Savor the Heritage." [level=1] [ref=e13]
+    - paragraph [ref=e14]: Discover the curated culinary soul of your next destination.
+  - generic [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]: City Context
+      - button "Ahmedabad ▾" [ref=e18] [cursor=pointer]:
+        - generic [ref=e19]: Ahmedabad
+        - generic [ref=e20]: ▾
+    - generic [ref=e21]:
+      - generic [ref=e22]: Restaurant
+      - textbox "Search restaurant" [ref=e23]
+    - button "Search" [ref=e24] [cursor=pointer]
+  - main [ref=e25]:
+    - generic [ref=e26]:
+      - heading "Local Food in Ahmedabad" [level=2] [ref=e27]
+      - generic [ref=e30]:
+        - heading "Ready to explore Ahmedabad?" [level=3] [ref=e31]
+        - paragraph [ref=e32]: Select your city and click Search to load signature foods.
+    - complementary [ref=e33]:
+      - generic [ref=e34]:
+        - heading "Closest Hotels" [level=3] [ref=e35]
+        - generic [ref=e36]: MFE Connected
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - generic [ref=e40]: Area (Near Food Hub)
+            - combobox [ref=e41]:
+              - option "Ahmedabad" [selected]
+              - option "Bangkok"
+              - option "Bengaluru"
+              - option "Chennai"
+              - option "Delhi"
+              - option "Dubai"
+              - option "Hyderabad"
+              - option "Indore"
+              - option "Jaipur"
+              - option "Kanpur"
+              - option "Kochi"
+              - option "Kolkata"
+              - option "London"
+              - option "Los Angeles"
+              - option "Lucknow"
+              - option "Mumbai"
+              - option "Nagpur"
+              - option "New York"
+              - option "Paris"
+              - option "Pune"
+              - option "Singapore"
+              - option "Surat"
+              - option "Sydney"
+              - option "Tokyo"
+          - generic [ref=e42]:
+            - generic [ref=e43]: Check In
+            - textbox [ref=e44]: 2026-04-21
+          - generic [ref=e45]:
+            - generic [ref=e46]: Check Out
+            - textbox [ref=e47]: 2026-04-23
+          - generic [ref=e48]:
+            - generic [ref=e49]: Room Type
+            - combobox [ref=e50]:
+              - option "Any" [selected]
+              - option "Standard"
+              - option "Deluxe"
+              - option "Premium"
+              - option "Suite"
+        - button "Find Hotels" [ref=e51] [cursor=pointer]
+        - article [ref=e52]:
+          - generic [ref=e53]: Ready to find your stay?
+          - paragraph [ref=e54]: Set filters and click Find Hotels to load matching options.
+```
+
 # Test source
 
 ```ts

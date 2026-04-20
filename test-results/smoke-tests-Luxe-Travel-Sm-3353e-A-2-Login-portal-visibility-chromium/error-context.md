@@ -12,22 +12,86 @@
 # Error details
 
 ```
-Error: page.goto: net::ERR_INSUFFICIENT_RESOURCES at http://localhost:5173/
+Error: expect(locator).toBeVisible() failed
+
+Locator: getByRole('heading', { name: /luxe travel login/i })
+Expected: visible
+Timeout: 5000ms
+Error: element(s) not found
+
 Call log:
-  - navigating to "http://localhost:5173/", waiting until "load"
+  - Expect "toBeVisible" with timeout 5000ms
+  - waiting for getByRole('heading', { name: /luxe travel login/i })
 
 ```
 
 # Page snapshot
 
 ```yaml
-- generic [ref=e6]:
-  - heading "This site can’t be reached" [level=1] [ref=e7]
-  - paragraph [ref=e8]:
-    - text: The webpage at
-    - strong [ref=e9]: http://localhost:5173/
-    - text: might be temporarily down or it may have moved permanently to a new web address.
-  - generic [ref=e10]: ERR_INSUFFICIENT_RESOURCES
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "LUXE Hotels Host Shell" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - text: LUXE Hotels
+        - generic [ref=e7]: Host Shell
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "My Bookings" [ref=e10] [cursor=pointer]:
+          - /url: /my-bookings
+        - link "Profile" [ref=e11] [cursor=pointer]:
+          - /url: /profile
+        - button "Sign In" [ref=e12] [cursor=pointer]
+  - generic [ref=e13]:
+    - heading "Discover Your Imperfect Escape." [level=1] [ref=e14]
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]: Destination
+        - button "Ahmedabad ▾" [ref=e18] [cursor=pointer]:
+          - generic [ref=e19]: Ahmedabad
+          - generic [ref=e20]: ▾
+      - generic [ref=e21]:
+        - generic [ref=e22]: Check in
+        - generic [ref=e23]:
+          - textbox [ref=e24]: 2026-04-21
+          - button "Open check-in calendar" [ref=e25] [cursor=pointer]:
+            - img [ref=e26]
+      - generic [ref=e28]:
+        - generic [ref=e29]: Check out
+        - generic [ref=e30]:
+          - textbox [ref=e31]: 2026-04-23
+          - button "Open check-out calendar" [ref=e32] [cursor=pointer]:
+            - img [ref=e33]
+      - generic [ref=e35]:
+        - generic [ref=e36]: Room Type
+        - button "Any ▾" [ref=e37] [cursor=pointer]:
+          - generic [ref=e38]: Any
+          - generic [ref=e39]: ▾
+      - button "Search" [ref=e40] [cursor=pointer]
+  - main [ref=e41]:
+    - generic [ref=e44]: Choose your destination and filters, then click Search to view hotels.
+    - complementary [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]: Mini MFE
+        - heading "Luxe Taste Explorer" [level=3] [ref=e48]
+        - paragraph [ref=e49]: Search signature dishes by restaurant within the selected city.
+      - generic [ref=e50]:
+        - generic [ref=e51]: City
+        - button "Ahmedabad ▾" [ref=e52] [cursor=pointer]:
+          - generic [ref=e53]: Ahmedabad
+          - generic [ref=e54]: ▾
+      - generic [ref=e55]:
+        - generic [ref=e56]: Restaurant Search
+        - textbox "Restaurant Search" [ref=e57]:
+          - /placeholder: Type restaurant name
+      - generic [ref=e58]:
+        - button "Search" [ref=e59] [cursor=pointer]
+        - button "Clear" [ref=e60] [cursor=pointer]
+      - generic [ref=e62]:
+        - generic [ref=e63]: No matches found
+        - paragraph [ref=e64]: Try a different restaurant keyword or clear your search.
+      - button "Open Full Taste Library" [ref=e65] [cursor=pointer]
 ```
 
 # Test source
@@ -47,9 +111,9 @@ Call log:
   12  |   });
   13  | 
   14  |   test('TAHA-2 Login portal visibility', async ({ page }) => {
-> 15  |     await page.goto(URLS.login);
-      |                ^ Error: page.goto: net::ERR_INSUFFICIENT_RESOURCES at http://localhost:5173/
-  16  |     await expect(page.getByRole('heading', { name: /luxe travel login/i })).toBeVisible();
+  15  |     await page.goto(URLS.login);
+> 16  |     await expect(page.getByRole('heading', { name: /luxe travel login/i })).toBeVisible();
+      |                                                                             ^ Error: expect(locator).toBeVisible() failed
   17  |   });
   18  | 
   19  |   test('TAHA-3 Taste Explorer basic load', async ({ page }) => {
@@ -149,4 +213,5 @@ Call log:
   113 | 
   114 |   // ─── 19-20: MISC VALIDATION ───
   115 |   test('TAHA-19 Guest count defaults to 2', async ({ page }) => {
+  116 |     await page.goto(`${URLS.hotels}/booking?hotelName=Test&city=Mumbai&roomType=Standard&pricePerNight=1000`);
 ```
