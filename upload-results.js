@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const FormData = require('form-data');
 
 async function upload() {
   const REGION = 'eu';
@@ -26,19 +25,18 @@ async function upload() {
     });
     const token = authRes.data;
 
-    // 2. Load and Prepare Xray JSON
+    // 2. Load Playwright Results
     const results = JSON.parse(fs.readFileSync(JSON_REPORT, 'utf8'));
+    
+    // 3. Prepare Xray JSON
     const xrayData = {
       info: {
         summary: `Execution Results: ${new Date().toLocaleString()}`,
-        description: "Automated Playwright run with bug creation and streaming evidence.",
+        description: "Automated Playwright run with bug creation and failure evidence.",
         project: projectKey
       },
       tests: []
     };
-
-    const form = new FormData();
-    let attachmentCount = 0;
 
     function processSuite(suite) {
       if (suite.suites) suite.suites.forEach(processSuite);
@@ -48,28 +46,30 @@ async function upload() {
           if (!match) return;
           const testKey = match[1];
 
-          // Use only the LATEST result for each spec to save space
-          const test = spec.tests[0];
-          const result = test.results[test.results.length - 1]; // Last attempt
+          // Always take the last attempt
+          const testAttempt = spec.tests[0];
+          const result = testAttempt.results[testAttempt.results.length - 1];
           
           const status = result.status === 'passed' ? 'PASSED' : 'FAILED';
           const xrayTest = {
             testKey: testKey,
             status: status,
-            comment: result.error ? `Error: ${result.error.message}` : "Passed"
+            comment: result.error ? `Error: ${result.error.message}` : "Passed",
+            evidence: []
           };
 
           if (status === 'FAILED') {
+            // Auto-create BUG
             xrayTest.defects = [{
               fields: {
                 summary: `Bug in ${testKey}: ${spec.title}`,
-                description: `Failed on CI.\n${result.error?.stack || result.error?.message}`,
+                description: `CI Failure.\nError:\n${result.error?.stack || result.error?.message}`,
                 issuetype: { name: "Bug" },
                 project: { key: projectKey }
               }
             }];
 
-            // Only attach evidence for FAILED tests to stay under the 413 limit
+            // Attach evidence ONLY for failures to stay under payload limits
             if (result.attachments) {
               result.attachments.forEach(attachment => {
                 let filePath = attachment.path;
@@ -77,10 +77,14 @@ async function upload() {
                 
                 if (filePath && fs.existsSync(filePath)) {
                   const filename = `${testKey}_${path.basename(filePath)}`;
-                  // Xray Multipart JSON expects 'file' for each attachment part
-                  form.append('file', fs.createReadStream(filePath), { filename });
-                  attachmentCount++;
-                  console.log(`📎 Queued evidence for ${testKey}: ${filename}`);
+                  const base64Data = fs.readFileSync(filePath).toString('base64');
+                  
+                  xrayTest.evidence.push({
+                    data: base64Data,
+                    filename: filename,
+                    contentType: filename.endsWith('.webm') ? 'video/webm' : 'image/png'
+                  });
+                  console.log(`📎 Embedded evidence for failure ${testKey}: ${filename}`);
                 }
               });
             }
@@ -92,22 +96,16 @@ async function upload() {
 
     results.suites.forEach(processSuite);
 
-    // 3. Prepare the Multipart Request
-    // The Xray Multipart JSON endpoint requires the JSON in a field named 'result'
-    form.append('result', JSON.stringify(xrayData), {
-        contentType: 'application/json',
-        filename: 'results.json'
-    });
-
-    console.log(`🚀 Streaming ${xrayData.tests.length} results + ${attachmentCount} attachments...`);
+    // 4. Send to Xray Standard JSON Endpoint
+    console.log(`🚀 Uploading ${xrayData.tests.length} results to Xray (Direct JSON)...`);
     
     const uploadRes = await axios.post(
-      `${XRAY_API_BASE}/api/v1/import/execution/multipart`,
-      form,
+      `${XRAY_API_BASE}/api/v1/import/execution`,
+      xrayData,
       {
         headers: {
           'Authorization': `Bearer ${token}`,
-          ...form.getHeaders()
+          'Content-Type': 'application/json'
         },
         maxContentLength: Infinity,
         maxBodyLength: Infinity
@@ -119,7 +117,7 @@ async function upload() {
 
   } catch (error) {
     if (error.response) {
-      console.error('❌ Xray API Error:', error.response.status, error.response.data);
+      console.error('❌ Xray API Error:', error.response.status, JSON.stringify(error.response.data, null, 2));
     } else {
       console.error('❌ Upload Failed:', error.message);
     }
