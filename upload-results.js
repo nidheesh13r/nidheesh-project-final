@@ -59,16 +59,6 @@ async function upload() {
           };
 
           if (status === 'FAILED') {
-            // Auto-create BUG
-            xrayTest.defects = [{
-              fields: {
-                summary: `Bug in ${testKey}: ${spec.title}`,
-                description: `CI Failure.\nError:\n${result.error?.stack || result.error?.message}`,
-                issuetype: { name: "Bug" },
-                project: { key: projectKey }
-              }
-            }];
-
             // Attach evidence ONLY for failures to stay under payload limits
             if (result.attachments) {
               result.attachments.forEach(attachment => {
