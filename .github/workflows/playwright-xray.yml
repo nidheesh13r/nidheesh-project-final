@@ -46,11 +46,11 @@ jobs:
       run: |
         # IMPORTANT: Xray uses region-specific API endpoints for data residency.
         # Change this to match your Jira region:
-        # - US: https://xray.cloud.us.xray.app
-        # - EU: https://xray.cloud.eu.xray.app
-        # - AU: https://xray.cloud.au.xray.app
+        # - US: https://us.xray.cloud.getxray.app
+        # - EU: https://eu.xray.cloud.getxray.app
+        # - AU: https://au.xray.cloud.getxray.app
         
-        XRAY_API_BASE="https://xray.cloud.us.xray.app"
+        XRAY_API_BASE="https://us.xray.cloud.getxray.app"
         
         echo "Authenticating with Xray ($XRAY_API_BASE)..."
         TOKEN=$(curl -s -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"${{ secrets.XRAY_CLIENT_ID }}\",\"client_secret\": \"${{ secrets.XRAY_CLIENT_SECRET }}\" }" $XRAY_API_BASE/api/v1/authenticate | tr -d '"')
