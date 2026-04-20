@@ -44,11 +44,19 @@ jobs:
     - name: Upload Test Results to Jira (Xray)
       if: always()
       run: |
-        echo "Authenticating with Xray..."
-        TOKEN=$(curl -s -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"${{ secrets.XRAY_CLIENT_ID }}\",\"client_secret\": \"${{ secrets.XRAY_CLIENT_SECRET }}\" }" https://xray.cloud.getxray.app/api/v1/authenticate | tr -d '"')
+        # IMPORTANT: Xray uses region-specific API endpoints for data residency.
+        # Change this to match your Jira region:
+        # - US: https://xray.cloud.us.xray.app
+        # - EU: https://xray.cloud.eu.xray.app
+        # - AU: https://xray.cloud.au.xray.app
+        
+        XRAY_API_BASE="https://xray.cloud.us.xray.app"
+        
+        echo "Authenticating with Xray ($XRAY_API_BASE)..."
+        TOKEN=$(curl -s -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"${{ secrets.XRAY_CLIENT_ID }}\",\"client_secret\": \"${{ secrets.XRAY_CLIENT_SECRET }}\" }" $XRAY_API_BASE/api/v1/authenticate | tr -d '"')
         
         echo "Uploading JUnit XML to Xray..."
-        curl -s -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $TOKEN" --data @"playwright-report/results.xml" "https://xray.cloud.getxray.app/api/v1/import/execution/junit?projectKey=${{ secrets.JIRA_PROJECT_KEY }}"
+        curl -s -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $TOKEN" --data @"playwright-report/results.xml" "$XRAY_API_BASE/api/v1/import/execution/junit?projectKey=${{ secrets.JIRA_PROJECT_KEY }}"
 
     - name: Save HTML Report Artifact
       uses: actions/upload-artifact@v4
