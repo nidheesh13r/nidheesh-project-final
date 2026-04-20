@@ -1,0 +1,745 @@
+<testsuites id="" name="" tests="20" failures="12" skipped="0" errors="6" time="97.129913">
+<testsuite name="smoke-tests.spec.ts" timestamp="2026-04-20T08:44:59.434Z" hostname="chromium" tests="20" failures="12" skipped="0" time="229.285" errors="6">
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-1 Hotels home page renders correctly" classname="smoke-tests.spec.ts" time="9.729">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-d7c36-home-page-renders-correctly-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-d7c36-home-page-renders-correctly-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-d7c36-home-page-renders-correctly-chromium\error-context.md]]
+]]>
+</system-out>
+<failure message="expect(locator).toBeVisible() failed" type="expect.toBeVisible">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:8:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-1 Hotels home page renders correctly 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /discover your perfect escape/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /discover your perfect escape/i })
+
+
+       9 |     await page.goto(URLS.hotels);
+      10 |     // BUG: heading says "Imperfect" but test expects "Perfect" → intentional FAIL
+    > 11 |     await expect(page.getByRole('heading', { name: /discover your perfect escape/i })).toBeVisible({ timeout: 5000 });
+         |                                                                                        ^
+      12 |   });
+      13 |
+      14 |   test('TAHA-2 Login portal visibility', async ({ page }) => {
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:11:88
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-d7c36-home-page-renders-correctly-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-d7c36-home-page-renders-correctly-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-d7c36-home-page-renders-correctly-chromium\error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-2 Login portal visibility" classname="smoke-tests.spec.ts" time="5.506">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-3353e-A-2-Login-portal-visibility-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-3353e-A-2-Login-portal-visibility-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-3353e-A-2-Login-portal-visibility-chromium\error-context.md]]
+]]>
+</system-out>
+<error message="page.goto: net::ERR_INSUFFICIENT_RESOURCES at http://localhost:5173/" type="Error">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:14:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-2 Login portal visibility 
+
+    Error: page.goto: net::ERR_INSUFFICIENT_RESOURCES at http://localhost:5173/
+    Call log:
+      - navigating to "http://localhost:5173/", waiting until "load"
+
+
+      13 |
+      14 |   test('TAHA-2 Login portal visibility', async ({ page }) => {
+    > 15 |     await page.goto(URLS.login);
+         |                ^
+      16 |     await expect(page.getByRole('heading', { name: /luxe travel login/i })).toBeVisible();
+      17 |   });
+      18 |
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:15:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-3353e-A-2-Login-portal-visibility-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-3353e-A-2-Login-portal-visibility-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-3353e-A-2-Login-portal-visibility-chromium\error-context.md
+]]>
+</error>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-3 Taste Explorer basic load" classname="smoke-tests.spec.ts" time="7.408">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-8885f-3-Taste-Explorer-basic-load-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-8885f-3-Taste-Explorer-basic-load-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-8885f-3-Taste-Explorer-basic-load-chromium\error-context.md]]
+]]>
+</system-out>
+<error message="page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5176/" type="Error">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:19:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-3 Taste Explorer basic load 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5176/
+    Call log:
+      - navigating to "http://localhost:5176/", waiting until "load"
+
+
+      18 |
+      19 |   test('TAHA-3 Taste Explorer basic load', async ({ page }) => {
+    > 20 |     await page.goto(URLS.taste);
+         |                ^
+      21 |     await expect(page.locator('header')).toBeVisible();
+      22 |   });
+      23 |
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:20:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-8885f-3-Taste-Explorer-basic-load-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-8885f-3-Taste-Explorer-basic-load-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-8885f-3-Taste-Explorer-basic-load-chromium\error-context.md
+]]>
+</error>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-4 Login form has email and password fields" classname="smoke-tests.spec.ts" time="14.797">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-51895-s-email-and-password-fields-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-51895-s-email-and-password-fields-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-51895-s-email-and-password-fields-chromium\error-context.md]]
+]]>
+</system-out>
+<failure message="expect(locator).toBeVisible() failed" type="expect.toBeVisible">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:25:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-4 Login form has email and password fields 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('input[type="email"]').first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('input[type="email"]').first()
+
+
+      25 |   test('TAHA-4 Login form has email and password fields', async ({ page }) => {
+      26 |     await page.goto(URLS.login);
+    > 27 |     await expect(page.locator('input[type="email"]').first()).toBeVisible();
+         |                                                               ^
+      28 |     await expect(page.locator('input[type="password"]').first()).toBeVisible();
+      29 |   });
+      30 |
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:27:63
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-51895-s-email-and-password-fields-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-51895-s-email-and-password-fields-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-51895-s-email-and-password-fields-chromium\error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-5 Security: External ReturnTo block" classname="smoke-tests.spec.ts" time="8.341">
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-6 Search button is present" classname="smoke-tests.spec.ts" time="0">
+<error message="worker process exited unexpectedly (code=3221226505, signal=null)" type="Error">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:37:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-6 Search button is present 
+
+    Error: worker process exited unexpectedly (code=3221226505, signal=null)
+]]>
+</error>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-7 Destination picker opens" classname="smoke-tests.spec.ts" time="30.043">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-250c0--7-Destination-picker-opens-chromium\error-context.md]]
+]]>
+</system-out>
+<error message="Test timeout of 30000ms exceeded while setting up &quot;page&quot;." type="Error">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:42:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-7 Destination picker opens 
+
+    Test timeout of 30000ms exceeded while setting up "page".
+
+    Error: browserContext.newPage: Test timeout of 30000ms exceeded.
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-250c0--7-Destination-picker-opens-chromium\error-context.md
+]]>
+</error>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-8 City options are populated" classname="smoke-tests.spec.ts" time="32.903">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-e2047--City-options-are-populated-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-e2047--City-options-are-populated-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-e2047--City-options-are-populated-chromium\error-context.md]]
+]]>
+</system-out>
+<error message="Test timeout of 30000ms exceeded." type="Error">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:48:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-8 City options are populated 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('.hotel-city-trigger').first()
+
+
+      48 |   test('TAHA-8 City options are populated', async ({ page }) => {
+      49 |     await page.goto(URLS.hotels);
+    > 50 |     await page.locator('.hotel-city-trigger').first().click();
+         |                                                       ^
+      51 |     const count = await page.locator('.hotel-search-suggestion').count();
+      52 |     expect(count).toBeGreaterThan(0);
+      53 |   });
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:50:55
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-e2047--City-options-are-populated-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-e2047--City-options-are-populated-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-e2047--City-options-are-populated-chromium\error-context.md
+]]>
+</error>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-9 Room type filter presence" classname="smoke-tests.spec.ts" time="7.558">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-45c1a-9-Room-type-filter-presence-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-45c1a-9-Room-type-filter-presence-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-45c1a-9-Room-type-filter-presence-chromium\error-context.md]]
+]]>
+</system-out>
+<failure message="expect(locator).toBeVisible() failed" type="expect.toBeVisible">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:55:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-9 Room type filter presence 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.search-cell').nth(3)
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('.search-cell').nth(3)
+
+
+      55 |   test('TAHA-9 Room type filter presence', async ({ page }) => {
+      56 |     await page.goto(URLS.hotels);
+    > 57 |     await expect(page.locator('.search-cell').nth(3)).toBeVisible();
+         |                                                       ^
+      58 |   });
+      59 |
+      60 |   test('TAHA-10 Date inputs are present in search bar', async ({ page }) => {
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:57:55
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-45c1a-9-Room-type-filter-presence-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-45c1a-9-Room-type-filter-presence-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-45c1a-9-Room-type-filter-presence-chromium\error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-10 Date inputs are present in search bar" classname="smoke-tests.spec.ts" time="7.164">
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-11 Booking page loads with hotel name" classname="smoke-tests.spec.ts" time="7.985">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-d56e1--page-loads-with-hotel-name-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-d56e1--page-loads-with-hotel-name-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-d56e1--page-loads-with-hotel-name-chromium\error-context.md]]
+]]>
+</system-out>
+<failure message="expect(locator).toBeVisible() failed" type="expect.toBeVisible">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:66:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-11 Booking page loads with hotel name 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('input[readonly]').first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('input[readonly]').first()
+
+
+      66 |   test('TAHA-11 Booking page loads with hotel name', async ({ page }) => {
+      67 |     await page.goto(`${URLS.hotels}/booking?hotelName=TestHotel&city=Delhi&roomType=Deluxe&pricePerNight=2000`);
+    > 68 |     await expect(page.locator('input[readonly]').first()).toBeVisible();
+         |                                                           ^
+      69 |   });
+      70 |
+      71 |   test('TAHA-12 Booking page has confirm button', async ({ page }) => {
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:68:59
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-d56e1--page-loads-with-hotel-name-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-d56e1--page-loads-with-hotel-name-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-d56e1--page-loads-with-hotel-name-chromium\error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-12 Booking page has confirm button" classname="smoke-tests.spec.ts" time="7.529">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-6bd95-ing-page-has-confirm-button-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-6bd95-ing-page-has-confirm-button-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-6bd95-ing-page-has-confirm-button-chromium\error-context.md]]
+]]>
+</system-out>
+<failure message="expect(locator).toBeVisible() failed" type="expect.toBeVisible">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:71:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-12 Booking page has confirm button 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: /confirm/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('button', { name: /confirm/i })
+
+
+      71 |   test('TAHA-12 Booking page has confirm button', async ({ page }) => {
+      72 |     await page.goto(`${URLS.hotels}/booking?hotelName=TestHotel&city=Delhi&roomType=Deluxe&pricePerNight=2000`);
+    > 73 |     await expect(page.getByRole('button', { name: /confirm/i })).toBeVisible();
+         |                                                                  ^
+      74 |   });
+      75 |
+      76 |   test('TAHA-13 Check-in date input exists', async ({ page }) => {
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:73:66
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-6bd95-ing-page-has-confirm-button-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-6bd95-ing-page-has-confirm-button-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-6bd95-ing-page-has-confirm-button-chromium\error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-13 Check-in date input exists" classname="smoke-tests.spec.ts" time="6.881">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-4d8f5--Check-in-date-input-exists-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-4d8f5--Check-in-date-input-exists-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-4d8f5--Check-in-date-input-exists-chromium\error-context.md]]
+]]>
+</system-out>
+<failure message="expect(locator).toBeVisible() failed" type="expect.toBeVisible">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:76:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-13 Check-in date input exists 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('input[type="date"]').first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('input[type="date"]').first()
+
+
+      76 |   test('TAHA-13 Check-in date input exists', async ({ page }) => {
+      77 |     await page.goto(`${URLS.hotels}/booking?hotelName=Test&city=Mumbai&roomType=Deluxe&pricePerNight=1000`);
+    > 78 |     await expect(page.locator('input[type="date"]').first()).toBeVisible();
+         |                                                              ^
+      79 |   });
+      80 |
+      81 |   test('TAHA-14 Check-out date input exists', async ({ page }) => {
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:78:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-4d8f5--Check-in-date-input-exists-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-4d8f5--Check-in-date-input-exists-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-4d8f5--Check-in-date-input-exists-chromium\error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-14 Check-out date input exists" classname="smoke-tests.spec.ts" time="6.701">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-7aef1-Check-out-date-input-exists-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-7aef1-Check-out-date-input-exists-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-7aef1-Check-out-date-input-exists-chromium\error-context.md]]
+]]>
+</system-out>
+<failure message="expect(locator).toBeVisible() failed" type="expect.toBeVisible">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:81:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-14 Check-out date input exists 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('input[type="date"]').nth(1)
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('input[type="date"]').nth(1)
+
+
+      81 |   test('TAHA-14 Check-out date input exists', async ({ page }) => {
+      82 |     await page.goto(`${URLS.hotels}/booking?hotelName=Test&city=Mumbai&roomType=Deluxe&pricePerNight=1000`);
+    > 83 |     await expect(page.locator('input[type="date"]').nth(1)).toBeVisible();
+         |                                                             ^
+      84 |   });
+      85 |
+      86 |   // ─── 15-18: CALCULATIONS & VALIDATION ───
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:83:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-7aef1-Check-out-date-input-exists-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-7aef1-Check-out-date-input-exists-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-7aef1-Check-out-date-input-exists-chromium\error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-15 Booking summary display" classname="smoke-tests.spec.ts" time="7.028">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-75f4d--15-Booking-summary-display-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-75f4d--15-Booking-summary-display-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-75f4d--15-Booking-summary-display-chromium\error-context.md]]
+]]>
+</system-out>
+<failure message="expect(locator).toBeVisible() failed" type="expect.toBeVisible">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:87:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-15 Booking summary display 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.booking-summary-row').first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('.booking-summary-row').first()
+
+
+      87 |   test('TAHA-15 Booking summary display', async ({ page }) => {
+      88 |     await page.goto(`${URLS.hotels}/booking?hotelName=Test&city=Mumbai&roomType=Deluxe&pricePerNight=1000`);
+    > 89 |     await expect(page.locator('.booking-summary-row').first()).toBeVisible();
+         |                                                                ^
+      90 |   });
+      91 |
+      92 |   test('TAHA-16 Nights calculation accuracy', async ({ page }) => {
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:89:64
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-75f4d--15-Booking-summary-display-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-75f4d--15-Booking-summary-display-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-75f4d--15-Booking-summary-display-chromium\error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-16 Nights calculation accuracy" classname="smoke-tests.spec.ts" time="7.605">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-e9205-Nights-calculation-accuracy-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-e9205-Nights-calculation-accuracy-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-e9205-Nights-calculation-accuracy-chromium\error-context.md]]
+]]>
+</system-out>
+<failure message="expect(locator).toBeVisible() failed" type="expect.toBeVisible">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:92:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-16 Nights calculation accuracy 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Nights')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByText('Nights')
+
+
+      93 |     // BUG: off-by-one in BookingPage → intentional FAIL (shows 2 instead of 3)
+      94 |     await page.goto(`${URLS.hotels}/booking?hotelName=Test&city=Mumbai&roomType=Deluxe&pricePerNight=1000&checkIn=2026-05-01&checkOut=2026-05-04`);
+    > 95 |     await expect(page.getByText('Nights')).toBeVisible();
+         |                                            ^
+      96 |     await expect(page.locator('.booking-summary-row').first()).toContainText('3');
+      97 |   });
+      98 |
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:95:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-e9205-Nights-calculation-accuracy-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-e9205-Nights-calculation-accuracy-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-e9205-Nights-calculation-accuracy-chromium\error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-17 Rooms default is 1" classname="smoke-tests.spec.ts" time="7.351">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-83a55--TAHA-17-Rooms-default-is-1-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-83a55--TAHA-17-Rooms-default-is-1-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-83a55--TAHA-17-Rooms-default-is-1-chromium\error-context.md]]
+]]>
+</system-out>
+<failure message="expect(locator).toBeVisible() failed" type="expect.toBeVisible">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:99:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-17 Rooms default is 1 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Rooms')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByText('Rooms')
+
+
+       99 |   test('TAHA-17 Rooms default is 1', async ({ page }) => {
+      100 |     await page.goto(`${URLS.hotels}/booking?hotelName=Test&city=Mumbai&roomType=Deluxe&pricePerNight=1000`);
+    > 101 |     await expect(page.getByText('Rooms')).toBeVisible();
+          |                                           ^
+      102 |     const roomsInput = page.locator('input[type="number"]').first();
+      103 |     await expect(roomsInput).toHaveValue('1');
+      104 |   });
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:101:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-83a55--TAHA-17-Rooms-default-is-1-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-83a55--TAHA-17-Rooms-default-is-1-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-83a55--TAHA-17-Rooms-default-is-1-chromium\error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-18 Government ID format validation" classname="smoke-tests.spec.ts" time="41.248">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-09f10-rnment-ID-format-validation-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-09f10-rnment-ID-format-validation-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-09f10-rnment-ID-format-validation-chromium\error-context.md]]
+]]>
+</system-out>
+<error message="Test timeout of 30000ms exceeded." type="Error">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:106:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-18 Government ID format validation 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('input[placeholder*="Passport"]')
+
+
+      107 |     // BUG: regex requires 100 digits → intentional FAIL (valid ID is rejected)
+      108 |     await page.goto(`${URLS.hotels}/booking?hotelName=Test&city=Mumbai&roomType=Deluxe&pricePerNight=1000`);
+    > 109 |     await page.locator('input[placeholder*="Passport"]').fill('ABC123456');
+          |                                                          ^
+      110 |     await page.getByRole('button', { name: /confirm/i }).click();
+      111 |     await expect(page.getByText(/valid government id/i)).not.toBeVisible();
+      112 |   });
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:109:58
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-09f10-rnment-ID-format-validation-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-09f10-rnment-ID-format-validation-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-09f10-rnment-ID-format-validation-chromium\error-context.md
+]]>
+</error>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-19 Guest count defaults to 2" classname="smoke-tests.spec.ts" time="6.857">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-2b72a-9-Guest-count-defaults-to-2-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-2b72a-9-Guest-count-defaults-to-2-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-2b72a-9-Guest-count-defaults-to-2-chromium\error-context.md]]
+]]>
+</system-out>
+<failure message="expect(locator).toHaveValue(expected) failed" type="expect.toHaveValue">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:115:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-19 Guest count defaults to 2 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: locator('input[type="number"]').nth(1)
+    Expected: "2"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveValue" with timeout 5000ms
+      - waiting for locator('input[type="number"]').nth(1)
+
+
+      116 |     await page.goto(`${URLS.hotels}/booking?hotelName=Test&city=Mumbai&roomType=Standard&pricePerNight=1000`);
+      117 |     const guestsInput = page.locator('input[type="number"]').nth(1);
+    > 118 |     await expect(guestsInput).toHaveValue('2');
+          |                               ^
+      119 |   });
+      120 |
+      121 |   test('TAHA-20 Booking page shows price per night', async ({ page }) => {
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:118:31
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-2b72a-9-Guest-count-defaults-to-2-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-2b72a-9-Guest-count-defaults-to-2-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-2b72a-9-Guest-count-defaults-to-2-chromium\error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="Luxe Travel Smoke Suite - 20 Cases › TAHA-20 Booking page shows price per night" classname="smoke-tests.spec.ts" time="6.651">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-7b3f3--page-shows-price-per-night-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-7b3f3--page-shows-price-per-night-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\smoke-tests-Luxe-Travel-Sm-7b3f3--page-shows-price-per-night-chromium\error-context.md]]
+]]>
+</system-out>
+<failure message="expect(locator).toBeVisible() failed" type="expect.toBeVisible">
+<![CDATA[  [chromium] › smoke-tests.spec.ts:121:7 › Luxe Travel Smoke Suite - 20 Cases › TAHA-20 Booking page shows price per night 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText(/5,000|5000/)
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByText(/5,000|5000/)
+
+
+      121 |   test('TAHA-20 Booking page shows price per night', async ({ page }) => {
+      122 |     await page.goto(`${URLS.hotels}/booking?hotelName=Test&city=Mumbai&roomType=Deluxe&pricePerNight=5000`);
+    > 123 |     await expect(page.getByText(/5,000|5000/)).toBeVisible();
+          |                                                ^
+      124 |   });
+      125 | });
+      126 |
+        at D:\nidheesh project original\tests\smoke-tests.spec.ts:123:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-7b3f3--page-shows-price-per-night-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\smoke-tests-Luxe-Travel-Sm-7b3f3--page-shows-price-per-night-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\smoke-tests-Luxe-Travel-Sm-7b3f3--page-shows-price-per-night-chromium\error-context.md
+]]>
+</failure>
+</testcase>
+</testsuite>
+</testsuites>
