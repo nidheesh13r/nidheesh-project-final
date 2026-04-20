@@ -77,8 +77,8 @@ async function upload() {
                 
                 if (filePath && fs.existsSync(filePath)) {
                   const filename = `${testKey}_${path.basename(filePath)}`;
-                  // Instead of base64, we append to the Multipart FORM
-                  form.append('attachment', fs.createReadStream(filePath), { filename });
+                  // Xray Multipart JSON expects 'file' for each attachment part
+                  form.append('file', fs.createReadStream(filePath), { filename });
                   attachmentCount++;
                   console.log(`📎 Queued evidence for ${testKey}: ${filename}`);
                 }
