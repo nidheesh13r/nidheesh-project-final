@@ -44,11 +44,9 @@ jobs:
     - name: Upload Test Results to Jira (Xray)
       if: always()
       run: |
-        # Change this to: us, eu, or au
-        REGION="us"
-        XRAY_API_BASE="https://${REGION}.xray.cloud.getxray.app"
+        XRAY_API_BASE="https://xray.cloud.getxray.app"
         
-        echo "Authenticating with Xray ($XRAY_API_BASE)..."
+        echo "Authenticating with Xray..."
         RESPONSE=$(curl -s -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"${{ secrets.XRAY_CLIENT_ID }}\",\"client_secret\": \"${{ secrets.XRAY_CLIENT_SECRET }}\" }" $XRAY_API_BASE/api/v1/authenticate)
         
         if [[ $RESPONSE == *"error"* ]]; then
