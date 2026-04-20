@@ -41,29 +41,15 @@ jobs:
         E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
         RUN_AUTH_TESTS: ${{ secrets.E2E_EMAIL != '' && 'true' || 'false' }}
 
-    - name: Upload Test Results to Jira (Xray)
+    - name: Upload Test Results with Evidence (Xray Multipart)
       if: always()
       run: |
-        XRAY_API_BASE="https://eu.xray.cloud.getxray.app"
-        
-        echo "Authenticating with Xray ($XRAY_API_BASE)..."
-        RESPONSE=$(curl -s -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"${{ secrets.XRAY_CLIENT_ID }}\",\"client_secret\": \"${{ secrets.XRAY_CLIENT_SECRET }}\" }" $XRAY_API_BASE/api/v1/authenticate)
-        
-        if [[ $RESPONSE == *"error"* ]]; then
-          echo "❌ Authentication Failed!"
-          echo "Response: $RESPONSE"
-          exit 1
-        fi
-        
-        TOKEN=$(echo $RESPONSE | tr -d '"')
-        
-        echo "✅ Authenticated. Uploading JUnit XML to Xray..."
-        UPLOAD_RESPONSE=$(curl -s -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $TOKEN" --data @"playwright-report/results.xml" "$XRAY_API_BASE/api/v1/import/execution/junit?projectKey=${{ secrets.JIRA_PROJECT_KEY }}")
-        
-        echo "Upload Response: $UPLOAD_RESPONSE"
-        if [[ $UPLOAD_RESPONSE == *"error"* ]]; then
-          exit 1
-        fi
+        npm install axios form-data
+        node upload-results.js
+      env:
+        XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
+        XRAY_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
+        JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
 
     - name: Save HTML Report Artifact
       uses: actions/upload-artifact@v4
