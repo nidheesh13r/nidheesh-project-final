@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { URLS, gotoAndExpectHeading } from './_shared';
 
 test.describe('Luxe Travel Smoke Suite - 20 Cases', () => {
+  test.describe.configure({ mode: 'parallel' });
   
   test.beforeEach(async ({ page }) => {
     // We intentionally expect "Perfect Escape" but the code says "Imperfect Escape"
